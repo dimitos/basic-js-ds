@@ -24,6 +24,12 @@ module.exports = class BinarySearchTree {
     }
   }
 
+  min = () => (this.#tree ? this.getMin(this.#tree) : null);
+  getMin = (node) => (node.left ? this.getMin(node.left) : node.data);
+
+  max = () => (this.#tree ? this.getMax(this.#tree) : null);
+  getMax = (node) => (node.right ? this.getMax(node.right) : node.data);
+
   has = (data) => this.find(data) !== null;
 
   find = (data, node = this.#tree) => {
@@ -37,14 +43,26 @@ module.exports = class BinarySearchTree {
     return null;
   };
 
-  remove(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-  }
+  remove = (data, node = this.#tree) => {
+    if (!node) return null;
+    if (data < node.data) {
+      //налево
+      node.left = this.remove(data, node.left);
+      return node;
+    } else if (data > node.data) {
+      //направо
+      node.right = this.remove(data, node.right);
+      return node;
+    } else {
+      // есть ли null у left right
+      if (!node.left && !node.right) return null;
+      if (!node.left) return node.right;
+      if (!node.right) return node.left;
 
-  min = () => (this.#tree ? this.getMin(this.#tree) : null);
-  getMin = (node) => (node.left ? this.getMin(node.left) : node.data);
-
-  max = () => (this.#tree ? this.getMax(this.#tree) : null);
-  getMax = (node) => (node.right ? this.getMax(node.right) : node.data);
+      node.data = this.minNode(node.right);
+      node.right = this.remove(node.data, node.right);
+      return node;
+    }
+  };
+  minNode = (node) => (node.left === null ? node.data : this.minNode(node.left));
 };

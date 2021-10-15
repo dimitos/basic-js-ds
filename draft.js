@@ -36,3 +36,14 @@ function max() {
   // } else n = null;
   // return n;
 }
+
+const remove = (data) => {
+  let node = this.find(data);
+  if (node.right) {
+    node.data = node.right.data;
+    node.right = node.right.right;
+  } else if (node.left) {
+    node.data = node.left.data;
+    node.left = node.left.right;
+  }
+};
