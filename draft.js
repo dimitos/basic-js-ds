@@ -18,3 +18,21 @@ function add(val) {
     }
   }
 }
+
+function max() {
+  //throw new NotImplementedError('Not implemented');
+  // remove line with error and write your code here
+
+  return this.isTreeEmpty() ? null : this.getMax(this.#tree);
+
+  // let n;
+  // if (!this.isTreeEmpty()) {
+  //   n = this.#tree.data;
+  //   let r = this.#tree;
+  //   while (r.right) {
+  //     n = r.data;
+  //     r = r.right;
+  //   }
+  // } else n = null;
+  // return n;
+}

@@ -6,39 +6,45 @@ const { Node } = require('../extensions/list-tree.js');
  * using Node from extensions
  */
 module.exports = class BinarySearchTree {
-  #tree = {};
-  root = () => (this.isTreeEmpty() ? null : this.#tree);
-  add = (val) => (this.isTreeEmpty() ? (this.#tree = new Node(val)) : this.recAdd(this.#tree, val));
+  #tree = null;
 
-  has(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  root = () => this.#tree;
+
+  add = (data) => (!this.#tree ? (this.#tree = new Node(data)) : this.recAdd(this.#tree, data));
+  recAdd(node, data) {
+    if (node.data > data && node.left === null) {
+      node.left = new Node(data);
+    } else if (node.data < data && node.right === null) {
+      node.right = new Node(data);
+    } else if (node.data > data) {
+      this.recAdd(node.left, data);
+      node = node.left;
+    } else {
+      this.recAdd(node.right, data);
+    }
   }
 
-  find(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-  }
+  has = (data) => this.find(data) !== null;
+
+  find = (data, node = this.#tree) => {
+    while (node) {
+      if (data > node.data) {
+        node = node.right;
+      } else if (data < node.data) {
+        node = node.left;
+      } else return node;
+    }
+    return null;
+  };
 
   remove(/* data */) {
     throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
   }
 
-  min() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-  }
+  min = () => (this.#tree ? this.getMin(this.#tree) : null);
+  getMin = (node) => (node.left ? this.getMin(node.left) : node.data);
 
-  max() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-    // let n;
-    // if (Object.keys(this.#tree).length !== 0) {
-    // } else n = null;
-    // return n;
-  }
-
-  isTreeEmpty = () => Object.keys(this.#tree).length === 0;
-  recAdd = (node, val) => (node.data < val ? (node.left ? this.recAdd(node.left, val) : (node.left = new Node(val))) : node.right ? this.recAdd(node.right, val) : (node.right = new Node(val)));
+  max = () => (this.#tree ? this.getMax(this.#tree) : null);
+  getMax = (node) => (node.right ? this.getMax(node.right) : node.data);
 };
