@@ -7,38 +7,16 @@ const { Node } = require('../extensions/list-tree.js');
  */
 module.exports = class BinarySearchTree {
   #tree = null;
-
   root = () => this.#tree;
-
-  add = (data) => (!this.#tree ? (this.#tree = new Node(data)) : this.recAdd(this.#tree, data));
-  recAdd(node, data) {
-    if (node.data > data && node.left === null) {
-      node.left = new Node(data);
-    } else if (node.data < data && node.right === null) {
-      node.right = new Node(data);
-    } else if (node.data > data) {
-      this.recAdd(node.left, data);
-      node = node.left;
-    } else {
-      this.recAdd(node.right, data);
-    }
-  }
-
-  min = () => (this.#tree ? this.getMin(this.#tree) : null);
-  getMin = (node) => (node.left ? this.getMin(node.left) : node.data);
-
-  max = () => (this.#tree ? this.getMax(this.#tree) : null);
-  getMax = (node) => (node.right ? this.getMax(node.right) : node.data);
-
+  add = (data) => (!this.#tree ? (this.#tree = new Node(data)) : this._recAdd(this.#tree, data));
+  min = (node = this.#tree) => (node ? (node.left ? this.min(node.left) : node.data) : null);
+  max = (node = this.#tree) => (node ? (node.right ? this.max(node.right) : node.data) : null);
   has = (data) => this.find(data) !== null;
-
   find = (data, node = this.#tree) => {
     while (node) {
-      if (data > node.data) {
-        node = node.right;
-      } else if (data < node.data) {
-        node = node.left;
-      } else return node;
+      if (data > node.data) node = node.right;
+      else if (data < node.data) node = node.left;
+      else return node;
     }
     return null;
   };
@@ -46,11 +24,11 @@ module.exports = class BinarySearchTree {
   remove = (data, node = this.#tree) => {
     if (!node) return null;
     if (data < node.data) {
-      //налево
+      // налево
       node.left = this.remove(data, node.left);
       return node;
     } else if (data > node.data) {
-      //направо
+      // направо
       node.right = this.remove(data, node.right);
       return node;
     } else {
@@ -58,11 +36,24 @@ module.exports = class BinarySearchTree {
       if (!node.left && !node.right) return null;
       if (!node.left) return node.right;
       if (!node.right) return node.left;
-
-      node.data = this.minNode(node.right);
+      node.data = this._minNode(node.right);
       node.right = this.remove(node.data, node.right);
       return node;
     }
   };
-  minNode = (node) => (node.left === null ? node.data : this.minNode(node.left));
+
+  _recAdd(node, data) {
+    if (node.data > data && node.left === null) {
+      node.left = new Node(data);
+    } else if (node.data < data && node.right === null) {
+      node.right = new Node(data);
+    } else if (node.data > data) {
+      this._recAdd(node.left, data);
+      node = node.left;
+    } else {
+      this._recAdd(node.right, data);
+    }
+  }
+
+  _minNode = (node) => (node.left === null ? node.data : this._minNode(node.left));
 };
